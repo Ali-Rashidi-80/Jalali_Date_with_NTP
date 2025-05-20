@@ -1,34 +1,10 @@
 # jalali_date_with_ntp.py
 # یک ماژول MicroPython برای دریافت زمان از NTP و تبدیل به تاریخ جلالی (فارسی) با تنظیم منطقه زمانی صحیح
-
+# Ali Rashidi
+# t.me/WriteYourway
 import ntptime
-import network
 import utime
-
-# تنظیمات Wi-Fi
-SSID = ""  # SSID واقعی را جایگزین کنید
-PASSWORD = ""  # رمز عبور واقعی را جایگزین کنید
-
-def connect_wifi():
-    """
-    اتصال به شبکه Wi-Fi.
-    بازگشت:
-        bool: True اگر متصل شد، False در غیر این صورت
-    """
-    try:
-        wlan = network.WLAN(network.STA_IF)
-        wlan.active(True)
-        if not wlan.isconnected():
-            wlan.connect(SSID, PASSWORD)
-            for _ in range(10):  # تا 10 ثانیه صبر کنید
-                if wlan.isconnected():
-                    return True
-                utime.sleep(1)
-        else:
-            return True
-        return False
-    except Exception:
-        return False
+import wifi  # وارد کردن ماژول wifi
 
 def set_ntp_time(server="ir.pool.ntp.org"):
     """
@@ -175,7 +151,7 @@ def get_jalali_datetime():
         dict: دیکشنری حاوی سال، ماه، روز، ساعت، دقیقه، ثانیه جلالی یا None در صورت شکست
     """
     try:
-        if not connect_wifi():
+        if not wifi.connect_wifi():  # استفاده از تابع connect_wifi از ماژول wifi
             return None
         if not set_ntp_time():
             return None
